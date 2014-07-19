@@ -1,4 +1,5 @@
-from django.core.urlresolvers import reverse, resolve
+from django.core import urlresolvers
+from django.core.urlresolvers import reverse, resolve, NoReverseMatch
 from django.template import Library, Node, TemplateSyntaxError, Variable
 from django.conf import settings
 
@@ -20,12 +21,16 @@ class ViewNode(Node):
         kwargs = {}
         for key, value in self.kwargs.items():
             kwargs[key] = Variable(value).resolve(context)
-
-        url = reverse(view_name, args=args, kwargs=kwargs)
-        url = url.replace('%40', '@')
-        match = resolve(url)
-        view = match.func
-
+        try:
+            url = reverse(view_name, args=args, kwargs=kwargs)
+            url = url.replace('%40', '@')
+            match = resolve(url)
+            view = match.func
+        except NoReverseMatch:
+            view = urlresolvers.get_callable(view_name, True)
+            if hasattr(view, 'as_view'):
+                view = view.as_view()
+            url = request.path
         try:
             if callable(view):
                 old_path = request.path
@@ -46,10 +51,12 @@ class ViewNode(Node):
         return ""
 
 
+
 @register.tag
 def render_partial(parser, token):
     """
-    Inserts the output of a view, using view name.
+    Inserts the output of a view, using fully qualified view name,
+    or view name from urls.py.
 
       {% render_partial view_name arg[ arg2] k=v [k2=v2...] %}
 

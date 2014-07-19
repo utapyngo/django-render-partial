@@ -3,4 +3,7 @@
 {% with some_var=2 %}
   {% render_partial 'class_based_partial_view' arg1=40 arg2=some_var %}
   {% render_partial 'function_based_partial_view' arg1=40 arg2=some_var %}
+
+  {% render_partial 'partial_test.views.PartialView' arg1=40 arg2=some_var %}
+  {% render_partial 'partial_test.views.partial_view' arg1=40 arg2=some_var %}
 {% endwith %}
