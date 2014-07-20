@@ -14,7 +14,7 @@ class ViewNode(Node):
 
     def render(self, context):
         if 'request' not in context:
-            return ""
+            return ''
         request = context['request']
         view_name = Variable(self.view_name).resolve(context)
         args = [Variable(arg).resolve(context) for arg in self.args]
@@ -44,11 +44,11 @@ class ViewNode(Node):
                     return content
                 finally:
                     request.path = old_path
-            raise ValueError("%r is not callable" % view)
+            raise ValueError('%r is not callable' % view)
         except:
             if settings.TEMPLATE_DEBUG:
-                raise
-        return ""
+               raise
+        return ''
 
 
 
@@ -79,7 +79,7 @@ def render_partial(parser, token):
     tag_name = tokens.pop(0)
     view_name = tokens.pop(0)
     for token in tokens:
-        equals = token.find("=")
+        equals = token.find('=')
         if equals == -1:
             args.append(token)
         else:
