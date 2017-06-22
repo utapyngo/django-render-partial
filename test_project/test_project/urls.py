@@ -1,12 +1,11 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 
 from partial_test.views import partial_test, PartialView, partial_view
 
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns(
-    '',
+urlpatterns = (
     url(r'^$', partial_test, name='partial_test'),
     url(r'^function-based-partial-view/(?P<arg1>\d+)/(?P<arg2>\d+)/$',
         partial_view,

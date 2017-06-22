@@ -27,7 +27,7 @@ class ViewNode(Node):
             match = resolve(url)
             view = match.func
         except NoReverseMatch:
-            view = urlresolvers.get_callable(view_name, True)
+            view = urlresolvers.get_callable(view_name)
             if hasattr(view, 'as_view'):
                 view = view.as_view()
             url = request.path
@@ -46,7 +46,7 @@ class ViewNode(Node):
                     request.path = old_path
             raise ValueError('%r is not callable' % view)
         except:
-            if settings.TEMPLATE_DEBUG:
+            if settings.DEBUG:
                raise
         return ''
 
