@@ -2,7 +2,7 @@ import os
 
 from setuptools import setup
 
-version = '0.2'
+version = '0.3'
 
 long_description = ''
 
@@ -18,14 +18,13 @@ setup(
       author_email='ut@pyngo.tom.ru',
       url='https://github.com/utapyngo/django-render-partial',
       packages=['django_render_partial', 'django_render_partial.templatetags'],
-      keywords = ['django', 'render', 'partial', 'view', 'template', 'tag'],
+      keywords=['django', 'render', 'partial', 'view', 'template', 'tag'],
       classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Operating System :: OS Independent',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Topic :: Software Development :: Libraries',
         'Topic :: Utilities',

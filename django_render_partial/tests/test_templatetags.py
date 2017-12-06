@@ -1,6 +1,6 @@
-from unittest import TestCase
 from django.http import HttpRequest, HttpResponse
-from django.template import Template, Context
+from django.template import Context, Template
+from django.test import TestCase, override_settings
 
 
 def partial_view(request, *args, **kwargs):
@@ -13,10 +13,11 @@ def partial_view(request, *args, **kwargs):
 
 
 class RenderPartialTemplateTagTests(TestCase):
+    @override_settings(TEMPLATES=[{'BACKEND': 'django.template.backends.django.DjangoTemplates'}])
     def test_render_partial_tag(self):
         content = Template(
             '{% load render_partial %}'
-            '{% render_partial "tests.test_templatetags.partial_view" x=4 %}'
+            '{% render_partial "django_render_partial.tests.test_templatetags.partial_view" x=4 %}'
         ).render(Context(dict(
             request=HttpRequest()
         )))

@@ -13,5 +13,5 @@ urlpatterns = (
     url(r'^class-based-partial-view/(?P<arg1>\d+)/(?P<arg2>\d+)/$',
         PartialView.as_view(),
         name='class_based_partial_view'),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
 )

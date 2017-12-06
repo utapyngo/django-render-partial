@@ -1,5 +1,5 @@
-from django.core import urlresolvers
-from django.core.urlresolvers import reverse, resolve, NoReverseMatch
+from django.urls.utils import get_callable
+from django.urls import reverse, resolve, NoReverseMatch
 from django.template import Library, Node, TemplateSyntaxError, Variable
 from django.conf import settings
 
@@ -27,10 +27,11 @@ class ViewNode(Node):
             match = resolve(url)
             view = match.func
         except NoReverseMatch:
-            view = urlresolvers.get_callable(view_name)
+            view = get_callable(view_name)
             if hasattr(view, 'as_view'):
                 view = view.as_view()
             url = request.path
+        # noinspection PyBroadException
         try:
             if callable(view):
                 old_path = request.path
@@ -40,14 +41,14 @@ class ViewNode(Node):
                     try:
                         content = v.rendered_content
                     except AttributeError:
-                        content = v.content
+                        content = v.content.decode()
                     return content
                 finally:
                     request.path = old_path
             raise ValueError('%r is not callable' % view)
         except:
             if settings.DEBUG:
-               raise
+                raise
         return ''
 
 
