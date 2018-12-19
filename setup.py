@@ -2,7 +2,7 @@ import os
 
 from setuptools import setup
 
-version = '0.3'
+version = '0.4'
 
 long_description = ''
 
