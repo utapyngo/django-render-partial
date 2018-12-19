@@ -1,4 +1,4 @@
-from django.conf.urls import include, url
+from django.conf.urls import url
 
 from partial_test.views import partial_test, PartialView, partial_view
 

@@ -1,7 +1,6 @@
-from django.urls.utils import get_callable
-from django.urls import reverse, resolve, NoReverseMatch
 from django.template import Library, Node, TemplateSyntaxError, Variable
-from django.conf import settings
+from django.urls import NoReverseMatch, resolve, reverse
+from django.urls.utils import get_callable
 
 register = Library()
 
@@ -31,26 +30,19 @@ class ViewNode(Node):
             if hasattr(view, 'as_view'):
                 view = view.as_view()
             url = request.path
-        # noinspection PyBroadException
-        try:
-            if callable(view):
-                old_path = request.path
+        if callable(view):
+            old_path = request.path
+            try:
+                request.path = url
+                v = view(request, *args, **kwargs)
                 try:
-                    request.path = url
-                    v = view(request, *args, **kwargs)
-                    try:
-                        content = v.rendered_content
-                    except AttributeError:
-                        content = v.content.decode()
-                    return content
-                finally:
-                    request.path = old_path
-            raise ValueError('%r is not callable' % view)
-        except:
-            if settings.DEBUG:
-                raise
-        return ''
-
+                    content = v.rendered_content
+                except AttributeError:
+                    content = v.content.decode()
+                return content
+            finally:
+                request.path = old_path
+        raise ValueError('%r is not callable' % view)
 
 
 @register.tag
@@ -77,7 +69,7 @@ def render_partial(parser, token):
             '%r tag requires one or more arguments' %
             token.contents.split()[0]
         )
-    tag_name = tokens.pop(0)
+    tokens.pop(0)  # tag name
     view_name = tokens.pop(0)
     for token in tokens:
         equals = token.find('=')
